@@ -12,5 +12,5 @@ USB Cable
 # Usage
 ![demo](https://user-images.githubusercontent.com/108346049/193576760-82d99c17-4d2c-4bf7-8e6f-20115ab6aac5.png)
 
-  git clone git@github.com:tnanami/PQN_vhdl.git  
+    git clone git@github.com:tnanami/PQN_vhdl.git
 open Vivado
