@@ -6,6 +6,22 @@
 In addition, the PQN model is designed to support the efficient implementation on digital arithmetic circuits.
 This repository provides a simple vhdl codes of the PQN model. These codes are incorporated into the Xilinx Vivado projects, allowing users to easily run PQN models on FPGAs.
 This repository includes contains 8 Vivado projects, each of which corresponds to 8 different modes of the PQN model (RSexci, RSinhi, FS, LTS, IB, EB, PB, or Class2).
+Each mode is fitted to reproduce the corresponding ionic-conductance model.
+
+|        |Mode                            |Target ionic-conductance model|Comment                    |
+|:-------|:------------------------------:|:---------------------------:|:-------------------------:|
+| RSexci |Regular Spiking                 |[1]                          |Fitted to a excitatory cell|
+| RSinhi |Regular Spiking                 |[1]                          |Fitted to an inhibitory cell|
+| FS     |Fast Spiking                    |[1]|
+| LTS    |Low-threshold Spiking           |[1]|
+| IB     |Intrinsically Bursting          |[1]|
+| EB     |Elliptic Bursting               |[2]|
+| PB     |Parablic Bursting               |[3]|
+| Class2 |Class2 of Hodgkin Classification||
+
+[1] M. Pospischil et al., “Minimal hodgkin-huxley type models for different classes of cortical and thalamic neurons.” Biological Cybernetics, vol. 99, no. 4-5, pp. 427–441, 2008.  
+[2] X. J. Wang, “Ionic basis for intrinsic 40 hz neuronal oscillations,” NeuroReport, vol. 5, pp. 221–224, 1993  
+[3] R. E. Plant, “Bifurcation and resonance in a model for bursting nerve cells,” Journal of Mathematical Biology, vol. 67, pp. 15–32, 1981.
 
 ## Requirements
 Digilent Cmod A7 35T FPGA  
@@ -17,3 +33,9 @@ USB Cable
 2. Open Vivado find the Tcl Console on the bottom of the window
 3. Move to the "RSexci" directory on the Tcl console
 4. Enter the command `source ./create_project.tcl`
+
+## UART communication
+
+    python demo.py
+
+The demo.py is a python code for the UART communication to the FPGA. 
