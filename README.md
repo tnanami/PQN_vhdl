@@ -6,7 +6,8 @@
 In addition, the PQN model is designed to support the efficient implementation on digital arithmetic circuits.
 This repository provides a simple vhdl codes of the PQN model. These codes are incorporated into the Xilinx Vivado projects, allowing users to easily run PQN models on FPGAs.
 This repository includes contains 8 Vivado projects, each of which corresponds to 8 different modes of the PQN model (RSexci, RSinhi, FS, LTS, IB, EB, PB, or Class2).
-Each mode is fitted to reproduce the corresponding ionic-conductance model.
+Each mode is fitted to reproduce the corresponding ionic-conductance model. Python version of the PQN model is available from [PQN_py](https://github.com/tnanami/PQN_py "PQN_py"). 
+
 
 |        |Mode                            |Target ionic-conductance model|Comment                    |
 |:-------|:------------------------------:|:---------------------------:|:-------------------------:|
