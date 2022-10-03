@@ -35,5 +35,5 @@ USB Cable
 4. Enter the command `source ./create_project.tcl`
 
 ## UART communication
-`python demo.py`
-The demo.py is a python code for the UART communication to the FPGA. This code send stimulus inputs and receives value of the membrane potential of the PQN unit. 
+`python demo.py`  
+The demo.py is a python code for the UART communication to the FPGA. This code send stimulus inputs and receives value of the membrane potential of the PQN unit.
