@@ -15,4 +15,4 @@ USB Cable
 1. Download project `git clone git@github.com:tnanami/PQN_vhdl.git`
 2. Open Vivado find the Tcl Console on the bottom of the window
 3. Move to the "RSexci" directory on the Tcl console
-4.
+4. Enter the command `source ./create_project.tcl`
