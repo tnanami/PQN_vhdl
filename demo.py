@@ -20,7 +20,6 @@ REST_TIME = 1       # additional receive time
 
 # global flag for controlling threads
 receiver_stop_flag=0
-receiver_processing_end_flag=0
 
 # decode the received 3-byte data to a float value
 def decoder(l0):
@@ -65,8 +64,6 @@ def receiver(ser):
     for i in range(len(list_v)):
         gv.append(decoder(list_v[i]))
         gI.append(decoder(list_I[i]))
-    global receiver_processing_end_flag
-    receiver_processing_end_flag=1
 
 # encode the float value (I) to 3-byte data
 def encode_I(I):
@@ -124,6 +121,7 @@ class serial_test:
         t1=time.time()
         t2=time.time()
         k0=0
+        ser.write(self.d0.packet_get())
         while t2-t1<self.tmax:
             ser.write(self.d0.packet_get())
             k0+=1
@@ -132,9 +130,7 @@ class serial_test:
         global receiver_stop_flag
         time.sleep(REST_TIME)
         receiver_stop_flag=1
-        global receiver_processing_end_flag
-        while receiver_processing_end_flag==0:
-            pass
+        thread1.join()
         ser.close()
         return gt,gv,gI
 
