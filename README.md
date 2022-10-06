@@ -25,7 +25,7 @@ Each mode is fitted to reproduce the corresponding ionic-conductance model. Pyth
 [3] R. E. Plant, “Bifurcation and resonance in a model for bursting nerve cells,” Journal of Mathematical Biology, vol. 67, pp. 15–32, 1981.
 
 ## Requirements
-Digilent Cmod A7 35T FPGA  
+Digilent Cmod A7 35T (Xilinx Artix-7 FPGA)  
 Xilinx Vivado 2018.3  
 USB Cable  
 
