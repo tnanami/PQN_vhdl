@@ -147,7 +147,7 @@ if __name__ == "__main__":
        # arg1: magnitude of I
     se0.insert_I(0,0)
     se0.insert_I(1,0.09)
-    se0.insert_I(2,0)
+    se0.insert_I(tmax-1,0)
 
     # run serial communication
     t0,v0,I0=se0.run()

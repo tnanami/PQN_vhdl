@@ -29,23 +29,22 @@ ARCHITECTURE Behavioral OF main IS
 		);
 	END COMPONENT;
 
-    -- generate triger signal that becomes 1 every 0.1 ms and 1ms
+    -- generate triger signal that becomes 1 every 0.1 ms
 	COMPONENT triger_generator
 		PORT (
 			clk : IN STD_LOGIC;
-			triger : OUT STD_LOGIC;
-			triger2 : OUT STD_LOGIC
+			triger : OUT STD_LOGIC
 		);
 	END COMPONENT;
-	
+ 
     -- PQN unit
 	COMPONENT pqn_unit IS
 		PORT (
 			clk : IN STD_LOGIC;
 			triger : IN STD_LOGIC;
-		    uart_rxd_I : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0);
-			uart_txd_v : OUT STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0);
-			uart_txd_I : OUT STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0)
+		    uart_rxd_I : IN STD_LOGIC_VECTOR(27 DOWNTO 0);
+			uart_txd_v : OUT STD_LOGIC_VECTOR(27 DOWNTO 0);
+			uart_txd_I : OUT STD_LOGIC_VECTOR(27 DOWNTO 0)
 		);
 	END COMPONENT;
  
@@ -60,8 +59,8 @@ ARCHITECTURE Behavioral OF main IS
 			clk : IN STD_LOGIC;
 			triger : IN STD_LOGIC;
 			uart_txd : OUT STD_LOGIC;
-			uart_txd_v : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0);
-			uart_txd_I : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0)
+			uart_txd_v : IN STD_LOGIC_VECTOR(27 DOWNTO 0);
+			uart_txd_I : IN STD_LOGIC_VECTOR(27 DOWNTO 0)
 		);
 	END COMPONENT;
  
@@ -78,13 +77,18 @@ ARCHITECTURE Behavioral OF main IS
  
 	SIGNAL clk100MHz : STD_LOGIC;
 	SIGNAL triger : STD_LOGIC := '0';
-	SIGNAL triger1ms : STD_LOGIC := '0';
 	SIGNAL uart_rxd_I : STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0) := (OTHERS => '0');
-	SIGNAL uart_txd_v : STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0) := (OTHERS => '0');
+	SIGNAL uart_rxd_I_28 : STD_LOGIC_VECTOR(27 DOWNTO 0) := (OTHERS => '0');
+	SIGNAL uart_txd_v : STD_LOGIC_VECTOR(20 DOWNTO 0) := (OTHERS => '0');
+	SIGNAL uart_txd_v_28 : STD_LOGIC_VECTOR(27 DOWNTO 0) := (OTHERS => '0');
     SIGNAL uart_txd_I : STD_LOGIC_VECTOR(PQN_BIT_WIDTH-1 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL uart_txd_I_28 : STD_LOGIC_VECTOR(27 DOWNTO 0) := (OTHERS => '0');
     
 BEGIN
-
+    uart_rxd_I_28 <= uart_rxd_I&"0000000000";
+    --uart_txd_v <= uart_txd_v_28;
+    --uart_txd_I <= uart_txd_I_28(27 downto 10);
+    
 	clk_generator_0 : clk_generator
 	PORT MAP(
 		clk_in1 => CLK, 
@@ -94,17 +98,16 @@ BEGIN
 	pqn_unit_0 : pqn_unit
 	PORT MAP(
 		clk => clk100MHz, 
-		triger => triger1ms, 
-		uart_rxd_I => uart_rxd_I,
-		uart_txd_v => uart_txd_v, 
-		uart_txd_I => uart_txd_I
+		triger => triger, 
+		uart_rxd_I => uart_rxd_I_28,
+		uart_txd_v => uart_txd_v_28, 
+		uart_txd_I => uart_txd_I_28
 	);
  
 	triger_generator_0 : triger_generator
 	PORT MAP(
 		clk => CLK100MHz, 
-		triger => triger,
-		triger2 => triger1ms
+		triger => triger
 	);
  
 	v_transmitter_0 : v_transmitter
@@ -112,8 +115,8 @@ BEGIN
 		clk => clk100MHz, 
 		triger => triger, 
 		uart_txd => uart_txd, 
-		uart_txd_v => uart_txd_v,
-		uart_txd_I => uart_txd_I
+		uart_txd_v => uart_txd_v_28,
+		uart_txd_I => uart_txd_I_28
 	); 
  
 	I_receiver_0 : I_receiver

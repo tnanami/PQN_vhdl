@@ -4,8 +4,8 @@
 
 **Piecewise Quadratic Neuron (PQN) model** is a spiking neuron model designed to faithfully reproduce a variety of neuronal activities with limited computational cost.
 In addition, the PQN model is designed to support the efficient implementation on digital arithmetic circuits.
-This repository provides a simple vhdl codes of the PQN model. These codes are incorporated into the Xilinx Vivado projects, allowing users to easily run PQN models on FPGAs.
-This repository includes contains 8 Vivado projects, each of which corresponds to 8 different modes of the PQN model (RSexci, RSinhi, FS, LTS, IB, EB, PB, or Class2).
+This repository provides a simple vhdl codes of the PQN model. The codes are incorporated into the Xilinx Vivado projects, allowing users to easily run PQN models on FPGAs.
+This repository contains 8 Vivado projects, each of which corresponds to 8 different modes of the PQN model (RSexci, RSinhi, FS, LTS, IB, EB, PB, or Class2).
 Each mode is fitted to reproduce the corresponding ionic-conductance model. Python version of the PQN model is available from [PQN_py](https://github.com/tnanami/PQN_py "PQN_py").
 
 
@@ -32,7 +32,7 @@ USB Cable
 ## Build the project
 1. Download project `git clone git@github.com:tnanami/PQN_vhdl.git`
 2. Open Vivado and find the Tcl Console on the bottom of the window
-3. Move to the "RSexci" directory on the Tcl console
+3. Move to a directory of the mode you want to use on the Tcl console
 4. Enter the command `source ./create_project.tcl`
 
 ## UART communication
