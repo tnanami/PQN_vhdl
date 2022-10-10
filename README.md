@@ -5,7 +5,7 @@
 **Piecewise Quadratic Neuron (PQN) model** is a spiking neuron model designed to faithfully reproduce a variety of neuronal activities with limited computational cost.
 In addition, the PQN model is designed to support the efficient implementation on digital arithmetic circuits.
 This repository provides a simple vhdl codes of the PQN model. The codes are incorporated into the Xilinx Vivado projects, allowing users to easily run PQN models on FPGAs.
-This repository contains 8 Vivado projects, each of which corresponds to 8 different modes of the PQN model (RSexci, RSinhi, FS, LTS, IB, EB, PB, or Class2).
+This repository contains 8 Vivado projects, each of which corresponds to 8 different modes of the PQN model (RSexci, RSinhi, FS, LTS, IB, EB, PB, or Class II).
 Each mode is fitted to reproduce the corresponding ionic-conductance model. Python version of the PQN model is available from [PQN_py](https://github.com/tnanami/PQN_py "PQN_py").
 
 
@@ -18,7 +18,7 @@ Each mode is fitted to reproduce the corresponding ionic-conductance model. Pyth
 | IB     |Intrinsically Bursting          |[1]|
 | EB     |Elliptic Bursting               |[2]|
 | PB     |Parablic Bursting               |[3]|
-| Class2 |Class2 of Hodgkin Classification||
+| Class2 |Class II of Hodgkin's Classification||
 
 [1] M. Pospischil et al., “Minimal hodgkin-huxley type models for different classes of cortical and thalamic neurons.” Biological Cybernetics, vol. 99, no. 4-5, pp. 427–441, 2008.  
 [2] X. J. Wang, “Ionic basis for intrinsic 40 hz neuronal oscillations,” NeuroReport, vol. 5, pp. 221–224, 1993  
@@ -40,4 +40,4 @@ USB Cable
 The demo.py is a python code for the UART communication to the FPGA. This code send stimulus inputs and receives value of the membrane potential of the PQN unit.
 
 ## Example
-![all](https://user-images.githubusercontent.com/108346049/194094287-f1471dd2-c092-45a4-8455-4556c6db35e4.png)
+![all](https://user-images.githubusercontent.com/108346049/194803882-13a07a8a-54db-460f-9958-ee612ef539d4.png)

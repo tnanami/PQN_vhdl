@@ -44,7 +44,7 @@ def receiver(ser):
         if ser.in_waiting>0:
             line0 = ser.read(ser.in_waiting)
             received_data.extend(list(line0))
-    print("start processing")
+    print("start decoding")
     list_v=[]
     list_I=[]
     t0=[]

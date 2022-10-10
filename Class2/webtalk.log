@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Webtalk v2018.3 (64-bit)
+# SW Build 2405991 on Thu Dec  6 23:38:27 MST 2018
+# IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
+# Start of session at: Mon Oct 10 14:30:35 2022
+# Process ID: 55824
+# Current directory: d:/research/github/PQN_vhdl/PQN_vhdl/Class2
+# Command line: wbtcv.exe -mode batch -source D:/research/github/PQN_vhdl/PQN_vhdl/Class2/Class2/Class2.hw/webtalk/labtool_webtalk.tcl -notrace
+# Log file: d:/research/github/PQN_vhdl/PQN_vhdl/Class2/webtalk.log
+# Journal file: d:/research/github/PQN_vhdl/PQN_vhdl/Class2\webtalk.jou
+#-----------------------------------------------------------
+source D:/research/github/PQN_vhdl/PQN_vhdl/Class2/Class2/Class2.hw/webtalk/labtool_webtalk.tcl -notrace
+INFO: [Common 17-206] Exiting Webtalk at Mon Oct 10 14:30:36 2022...
