@@ -13,7 +13,7 @@ ENTITY uart_txd_ctrl IS
 END uart_txd_ctrl;
 ARCHITECTURE Behavioral OF uart_txd_ctrl IS
 
-    CONSTANT bit_counter_max : NATURAL := 100; -- = 100MHz clock / 1000000 baud rate
+    CONSTANT bit_counter_max : NATURAL := 50; -- = 100MHz clock / 2000000 baud rate
 	CONSTANT start_bit : std_logic_vector(0 DOWNTO 0) := "0";
 	CONSTANT stop_bit : std_logic_vector(0 DOWNTO 0) := "1";
  
@@ -21,7 +21,7 @@ ARCHITECTURE Behavioral OF uart_txd_ctrl IS
 	SIGNAL index : NATURAL;
 	CONSTANT index_max : NATURAL := 10;
 	SIGNAL counter0 : std_logic_vector(17 DOWNTO 0) := (OTHERS => '0');
-	TYPE MAIN_STATE_TYPE IS (READY, UPDATE_UART_TX, WAITING,ENDING);
+	TYPE MAIN_STATE_TYPE IS (READY, UPDATE_UART_TX, WAITING, ENDING);
 	SIGNAL MAIN_STATE : MAIN_STATE_TYPE := READY;
 
 BEGIN
@@ -64,4 +64,5 @@ BEGIN
 			END CASE;
 		END IF;
 	END PROCESS; 
+	
 END Behavioral;

@@ -12,8 +12,8 @@ ENTITY uart_rxd_ctrl IS
 END uart_rxd_ctrl;
 ARCHITECTURE Behavioral OF uart_rxd_ctrl IS
 
-CONSTANT  bit_counter_max : NATURAL := 100; -- =  1000000 baud rate / 100MHz clock
-CONSTANT  bit_delay_max : NATURAL := 50; -- = bit_counter_max/2 
+CONSTANT  bit_counter_max : NATURAL := 50; -- =  2000000 baud rate / 100MHz clock
+CONSTANT  bit_delay_max : NATURAL := 25; -- = bit_counter_max/2 
 
 CONSTANT index_max : NATURAL := 8;
 SIGNAL index : NATURAL;
@@ -36,7 +36,7 @@ BEGIN
 						MAIN_STATE <= DELAY;
 					END IF;
 				WHEN DELAY => 
-				    IF(counter0<bit_delay_max)THEN
+				    IF(counter0 < bit_delay_max)THEN
 				        counter0 <= (OTHERS => '0');
 				        MAIN_STATE <= WAITING;
 				    ELSE
@@ -65,8 +65,5 @@ BEGIN
 			END CASE;
 		END IF;
 	END PROCESS; 
-
-
-
 
 END BEHAVIORAL;
