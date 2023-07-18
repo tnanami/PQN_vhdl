@@ -1,9 +1,11 @@
 -- UART transmitter
--- transmit v (membrane potential of a neuron) and I (stimulus input)
--- both signals are represented by 18-bit and encoded into 3 byte data through UART communication
+-- transmit v (membrane potential of a neuron)
+-- each signal is represented by 18-bit and encoded into 3 byte data through UART communication
 -- packets are sent every 0.1 ms depending on the TRIGER signal
--- a single packet is composed of following seven byte data
--- v(17 downto 11), v1(10 downto 4), v2(3 downto 0), I0(17 downto 11), I1(10 downto 4), I2(3 downto 0), 10(LF)
+-- a single packet is composed of following 13 byte data
+-- v0(17 downto 11), v0(10 downto 4), v0(3 downto 0), v1(17 downto 11),
+-- v1(10 downto 4), v1(3 downto 0), v2(17 downto 11), v2(10 downto 4),
+-- v2(3 downto 0), v3(17 downto 11), v3(10 downto 4), v3(3 downto 0), 10(LF)
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.std_logic_unsigned.ALL;
@@ -13,8 +15,10 @@ ENTITY v_transmitter IS
 		CLK : IN STD_LOGIC;
 		TRIGER : IN STD_LOGIC;
 		UART_TXD : OUT STD_LOGIC;
-		UART_TXD_V : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0);
-		UART_TXD_I : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0)
+		UART_TXD_V0 : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0);
+		UART_TXD_V1 : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0);
+		UART_TXD_V2 : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0);
+		UART_TXD_V3 : IN STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0)
 	);
 END v_transmitter;
 ARCHITECTURE Behavioral OF v_transmitter IS
@@ -28,7 +32,7 @@ ARCHITECTURE Behavioral OF v_transmitter IS
 			send_ready : OUT STD_LOGIC
 		);
 	END COMPONENT;
-	TYPE STATE_TYPE IS (STANDBY, SEND_MEASURING0, SEND_MEASURING1, SEND_MEASURING2, SEND_MEASURING3, SEND_MEASURING4, SEND_MEASURING5, END0, END1);
+	TYPE STATE_TYPE IS (STANDBY, SEND_MEASURINGib0, SEND_MEASURINGib1, SEND_MEASURINGib2, SEND_MEASURINGlts0, SEND_MEASURINGlts1, SEND_MEASURINGlts2, SEND_MEASURINGrs0, SEND_MEASURINGrs1, SEND_MEASURINGrs2, SEND_MEASURINGfs0, SEND_MEASURINGfs1, SEND_MEASURINGfs2, SEND_MEASURINGi0, SEND_MEASURINGi1, SEND_MEASURINGi2, END0, END1);
 	SIGNAL STATE : STATE_TYPE := STANDBY;
 	SIGNAL counter0 : NATURAL := 0;
 	SIGNAL counter1 : NATURAL := 0;
@@ -38,7 +42,7 @@ ARCHITECTURE Behavioral OF v_transmitter IS
 	SIGNAL v_copied : STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0) := (OTHERS => '0');
 	SIGNAL I_copied : STD_LOGIC_VECTOR(PQN_BIT_WIDTH - 1 DOWNTO 0) := (OTHERS => '0');
 	SIGNAL send_counter_max : NATURAL := 1;
-    SIGNAL data_num_max : NATURAL := 1;
+	SIGNAL data_num_max : NATURAL := 1;
 
 BEGIN
 	uart_txd_ctrl_0 : uart_txd_ctrl
@@ -57,12 +61,11 @@ BEGIN
 				WHEN STANDBY => 
 					SEND_START <= '0';
 					IF (TRIGER = '1') THEN
-						STATE <= SEND_MEASURING0;
-						v_copied <= UART_TXD_V;
-						I_copied <= UART_TXD_I;
+						STATE <= SEND_MEASURINGib0;
+						v_copied <= UART_TXD_V0;
 						counter0 <= 0;
 					END IF;
-				WHEN SEND_MEASURING0 => 
+				WHEN SEND_MEASURINGib0 => 
 					IF (counter0 < send_counter_max) THEN
 						send_start <= '0';
 						counter0 <= counter0 + 1;
@@ -71,10 +74,10 @@ BEGIN
 							send_data <= "1" & v_copied(17 DOWNTO 11);
 							send_start <= '1';
 							counter0 <= 0;
-							STATE <= SEND_MEASURING1;
+							STATE <= SEND_MEASURINGib1;
 						END IF;
 					END IF;
-				WHEN SEND_MEASURING1 => 
+				WHEN SEND_MEASURINGib1 => 
 					IF (counter0 < send_counter_max) THEN
 						send_start <= '0';
 						counter0 <= counter0 + 1;
@@ -83,10 +86,10 @@ BEGIN
 							send_data <= "1" & v_copied(10 DOWNTO 4);
 							send_start <= '1';
 							counter0 <= 0;
-							STATE <= SEND_MEASURING2;
+							STATE <= SEND_MEASURINGib2;
 						END IF;
 					END IF;
-				WHEN SEND_MEASURING2 => 
+				WHEN SEND_MEASURINGib2 => 
 					IF (counter0 < send_counter_max) THEN
 						send_start <= '0';
 						counter0 <= counter0 + 1;
@@ -95,49 +98,118 @@ BEGIN
 							send_data <= "1" & v_copied(3 DOWNTO 0) & "000";
 							send_start <= '1';
 							counter0 <= 0;
-							STATE <= SEND_MEASURING3;
+							STATE <= SEND_MEASURINGlts0;
+							v_copied <= UART_TXD_V1;
 						END IF;
 					END IF;
-				WHEN SEND_MEASURING3 => 
+				WHEN SEND_MEASURINGlts0 => 
 					IF (counter0 < send_counter_max) THEN
 						send_start <= '0';
 						counter0 <= counter0 + 1;
 					ELSIF (counter0 = send_counter_max) THEN
 						IF (send_ready = '1') THEN
-							send_data <= "1" & I_copied(17 DOWNTO 11);
+							send_data <= "1" & v_copied(17 DOWNTO 11);
 							send_start <= '1';
 							counter0 <= 0;
-							STATE <= SEND_MEASURING4;
+							STATE <= SEND_MEASURINGlts1;
 						END IF;
 					END IF;
-				WHEN SEND_MEASURING4 => 
+				WHEN SEND_MEASURINGlts1 => 
 					IF (counter0 < send_counter_max) THEN
 						send_start <= '0';
 						counter0 <= counter0 + 1;
 					ELSIF (counter0 = send_counter_max) THEN
 						IF (send_ready = '1') THEN
-							send_data <= "1" & I_copied(10 DOWNTO 4);
+							send_data <= "1" & v_copied(10 DOWNTO 4);
 							send_start <= '1';
 							counter0 <= 0;
-							STATE <= SEND_MEASURING5;
+							STATE <= SEND_MEASURINGlts2;
 						END IF;
 					END IF;
-				WHEN SEND_MEASURING5 => 
+				WHEN SEND_MEASURINGlts2 => 
 					IF (counter0 < send_counter_max) THEN
 						send_start <= '0';
 						counter0 <= counter0 + 1;
 					ELSIF (counter0 = send_counter_max) THEN
 						IF (send_ready = '1') THEN
-							send_data <= "1" & I_copied(3 DOWNTO 0) & "000";
+							send_data <= "1" & v_copied(3 DOWNTO 0) & "000";
 							send_start <= '1';
 							counter0 <= 0;
-							IF (counter1 < data_num_max-1) THEN
-							    counter1 <= counter1 + 1;
-							    STATE <= STANDBY;
-							ELSE
-							    counter1 <= 0;
-							    STATE <= END0;
-							END IF;
+							STATE <= SEND_MEASURINGrs0;
+							v_copied <= UART_TXD_V2;
+						END IF;
+					END IF;
+				WHEN SEND_MEASURINGrs0 => 
+					IF (counter0 < send_counter_max) THEN
+						send_start <= '0';
+						counter0 <= counter0 + 1;
+					ELSIF (counter0 = send_counter_max) THEN
+						IF (send_ready = '1') THEN
+							send_data <= "1" & v_copied(17 DOWNTO 11);
+							send_start <= '1';
+							counter0 <= 0;
+							STATE <= SEND_MEASURINGrs1;
+						END IF;
+					END IF;
+				WHEN SEND_MEASURINGrs1 => 
+					IF (counter0 < send_counter_max) THEN
+						send_start <= '0';
+						counter0 <= counter0 + 1;
+					ELSIF (counter0 = send_counter_max) THEN
+						IF (send_ready = '1') THEN
+							send_data <= "1" & v_copied(10 DOWNTO 4);
+							send_start <= '1';
+							counter0 <= 0;
+							STATE <= SEND_MEASURINGrs2;
+						END IF;
+					END IF;
+				WHEN SEND_MEASURINGrs2 => 
+					IF (counter0 < send_counter_max) THEN
+						send_start <= '0';
+						counter0 <= counter0 + 1;
+					ELSIF (counter0 = send_counter_max) THEN
+						IF (send_ready = '1') THEN
+							send_data <= "1" & v_copied(3 DOWNTO 0) & "000";
+							send_start <= '1';
+							counter0 <= 0;
+							v_copied <= UART_TXD_V3;
+							STATE <= SEND_MEASURINGfs0;
+						END IF;
+					END IF;
+				WHEN SEND_MEASURINGfs0 => 
+					IF (counter0 < send_counter_max) THEN
+						send_start <= '0';
+						counter0 <= counter0 + 1;
+					ELSIF (counter0 = send_counter_max) THEN
+						IF (send_ready = '1') THEN
+							send_data <= "1" & v_copied(17 DOWNTO 11);
+							send_start <= '1';
+							counter0 <= 0;
+							STATE <= SEND_MEASURINGfs1;
+						END IF;
+					END IF;
+				WHEN SEND_MEASURINGfs1 => 
+					IF (counter0 < send_counter_max) THEN
+						send_start <= '0';
+						counter0 <= counter0 + 1;
+					ELSIF (counter0 = send_counter_max) THEN
+						IF (send_ready = '1') THEN
+							send_data <= "1" & v_copied(10 DOWNTO 4);
+							send_start <= '1';
+							counter0 <= 0;
+							STATE <= SEND_MEASURINGfs2;
+						END IF;
+					END IF;
+				WHEN SEND_MEASURINGfs2 => 
+					IF (counter0 < send_counter_max) THEN
+						send_start <= '0';
+						counter0 <= counter0 + 1;
+					ELSIF (counter0 = send_counter_max) THEN
+						IF (send_ready = '1') THEN
+							send_data <= "1" & v_copied(3 DOWNTO 0) & "000";
+							send_start <= '1';
+							counter0 <= 0;
+							STATE <= END0;
 						END IF;
 					END IF;
 				WHEN END0 => 
@@ -157,4 +229,5 @@ BEGIN
 			END CASE;
 		END IF;
 	END PROCESS;
+ 
 END Behavioral;
